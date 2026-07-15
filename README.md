@@ -147,4 +147,4 @@ CARVE/
 ## Integrity
 - Code verified complete: 0 unresolved local imports, all files byte-compile.
 - Stage-2 endpoint reproduces offline from the cached VLM verdicts (md5-verified vs originals).
-- No gt-tuned numbers; pose held constant (blank) across the chain — see `RESULTS.md`.
+
