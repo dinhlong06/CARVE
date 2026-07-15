@@ -86,8 +86,7 @@ cd .. && python3 tools/dump_s2hy7_compliant.py              # rich pool + defaul
 python3 eval_submission.py submissions/lambdamart_3enc_rich_s2hy7_synL5
 # -> R@1 82.10 / R@5 94.74 / R@10 95.90 / mAP 87.99   (L5 fired 84)
 ```
-This writes the uploadable leaderboard file at
-`src/submissions/lambdamart_3enc_rich_s2hy7_synL5/answer.txt` (1,978 lines × top-10 tokens).
+That run directory gets the uploadable `answer.txt` (1,978 lines × top-10 tokens).
 
 **Full chain from scratch** (needs GPU + `cmp.pth`, see `WEIGHTS.md`), pinned in `scripts/run_all.sh`:
 Stage-1 encode (`infer_submit.py --joint_adapter weights/adapter_ep1 --blank_pose --pool_k 128`) →

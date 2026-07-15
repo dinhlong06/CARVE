@@ -140,10 +140,10 @@ are cached, so Stage 2 is **CPU-only replay** — no live inference in the repro
 ```mermaid
 flowchart TD
     P["Stage-1 rich pool (R@1 77.15)"] --> B
-    B["Default s2hy6 blend<br/>minmax-normalized Qwen logprob + InternVL + SmolVLM<br/>(default weights, NO gt tuning)"] -->|R@1 81.65| L1
+    B["Default s2hy6 blend<br/>minmax-normalized Qwen logprob + InternVL + SmolVLM<br/>(default weights, NO gt tuning)"] -->|"R@1 81.65"| L1
     L1["L1 — consensus tidy"] --> L4
-    L4["L4 — deep-rescue (2nd-pass verifier)"] -->|R@1 81.34| L5
-    L5["L5 — diverse-consensus override:<br/>promote a lower candidate iff ≥2 different-family<br/>VLMs prefer it over top-1 by margin dmarg"] -->|R@1 82.10| O["Final ranking"]
+    L4["L4 — deep-rescue (2nd-pass verifier)"] -->|"R@1 81.34"| L5
+    L5["L5 — diverse-consensus override:<br/>promote a lower candidate iff ≥2 different-family<br/>VLMs prefer it over top-1 by margin dmarg"] -->|"R@1 82.10"| O["Final ranking"]
 ```
 
 **Design principle (learned from ablations):** *binary keeps the verdict, logprob only orders ties,
@@ -216,6 +216,5 @@ python3 eval_submission.py submissions/lambdamart_3enc_rich_s2hy7_synL5
 Full details, ablations, and the from-scratch (GPU) path: [`RESULTS.md`](RESULTS.md),
 [`README.md`](README.md), weights/data manifest [`WEIGHTS.md`](WEIGHTS.md).
 
-**Leaderboard file:** the reproduce above writes
-`src/submissions/lambdamart_3enc_rich_s2hy7_synL5/answer.txt` (1,978 lines × top-10 tokens), ready to
+**Leaderboard file:** that run directory gets an `answer.txt` (1,978 lines × top-10 tokens), ready to
 zip and upload, alongside `submission.json`, `scores.json` and `meta.json`.
