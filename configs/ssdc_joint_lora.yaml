@@ -1,0 +1,33 @@
+# configs/ssdc_joint_lora.yaml  (inherits CMP shape from ssdc_consistency.yaml)
+vision_config: 'configs/config_swinB.json'
+text_config: 'configs/config_bert.json'
+text_encoder: 'checkpoint/bert-base-uncased'
+h: 224
+w: 224
+max_words: 56
+max_tokens: 56
+embed_dim: 2048
+itc_dp: 0.5
+temp: 0.07
+label_smooth: 0.2      # read by CMP __init__ (cmp.py:112)
+load_params: False     # CMP build: don't load swin/bert pretrained here — model.load_pretrained(cmp.pth) does it
+load_pretrained: True
+be_pose_img: true
+pose_conv: true
+batch_size_train: 64
+num_workers: 4
+optimizer: {opt: adamW, lr: 5e-4, weight_decay: 0.01}
+schedular: {epochs: 6}
+# --- joint LoRA ---
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+lora_proj_heads: 'vision_only'      # {none, vision_only, both} — ablate via val
+lam_img: 1.0
+lam_txt: 1.0
+loss_alpha: 0.5
+loss_beta: 1.0
+# --- data (train images live in dataset/train, mounted at data/PAB/train in ssdc-eval) ---
+train_gallery: 'data/synthetic_eval/train_gallery.jsonl'
+train_noisy:   'data/synthetic_eval/train_queries_noisy.jsonl'
+train_img_root: 'data/PAB'

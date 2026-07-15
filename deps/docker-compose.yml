@@ -1,0 +1,46 @@
+# Two-stage SSDC pipeline, each stage in its own image (incompatible deps):
+#   stage1 -> SSDC retriever (transformers 4.x, no vLLM)
+#   stage2 -> Qwen3-VL re-rank via vLLM (transformers 5.x)
+#
+# Common settings are shared via the YAML anchor below.
+x-common: &common
+  working_dir: /workspace/SSDC
+  volumes:
+    # Live mount of the whole project (covers data/, checkpoint/, output/, ...).
+    - .:/workspace/SSDC
+    # Qwen weights live OUTSIDE SSDC (at vannk/Qwen3-VL-8B-Instruct), read-only.
+    # Run stage-2 with: --model_dir /workspace/Qwen3-VL-8B-Instruct
+    - ../Qwen3-VL-8B-Instruct:/workspace/Qwen3-VL-8B-Instruct:ro
+    # Synthetic training set lives at the root ../dataset (SSDC-luan/data/PAB train was wiped).
+    # Mounted for finetune: image_root=/workspace/dataset (train/imgs_*, pose/train/imgs_*, annotation/train/attr_*.json).
+    - ../dataset:/workspace/dataset
+  environment:
+    - HF_HOME=/workspace/SSDC/.hf_cache
+    - CUDA_VISIBLE_DEVICES=2,6
+  shm_size: "32gb"
+  ipc: host
+  command: ["tail", "-f", "/dev/null"]   # keep alive; exec in to run scripts
+  deploy:
+    resources:
+      reservations:
+        devices:
+          - driver: nvidia
+            count: all
+            capabilities: [gpu]
+
+services:
+  stage1:
+    <<: *common
+    build:
+      context: .
+      dockerfile: Dockerfile.stage1
+    image: ssdc-stage1
+    container_name: ssdc-stage1
+
+  stage2:
+    <<: *common
+    build:
+      context: .
+      dockerfile: Dockerfile.stage2
+    image: ssdc-stage2
+    container_name: ssdc-stage2

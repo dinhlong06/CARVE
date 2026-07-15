@@ -1,0 +1,35 @@
+# ============================================================
+# Stage-1: SSDC retriever (BERT + Swin). Needs transformers 4.x.
+# No vLLM here — keeps the env compatible with the custom BERT.
+# ============================================================
+FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    HF_HOME=/workspace/SSDC/.hf_cache
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        python3.10 python3-pip python3.10-dev \
+        git wget curl ca-certificates \
+        libgl1 libglib2.0-0 \
+    && ln -sf /usr/bin/python3.10 /usr/bin/python \
+    && ln -sf /usr/bin/python3.10 /usr/bin/python3 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN python -m pip install --upgrade pip setuptools wheel
+
+WORKDIR /workspace/SSDC
+
+# Torch must be installed explicitly (no vLLM to pull it in). CUDA 12.4 build.
+RUN pip install torch==2.4.0 torchvision==0.19.0 --index-url https://download.pytorch.org/whl/cu124
+
+# SSDC base requirements, then PIN transformers to a 4.x compatible with models/bert.py.
+COPY requirements.txt ./requirements.txt
+RUN pip install -r requirements.txt \
+    && pip install "transformers==4.44.2"
+
+COPY . /workspace/SSDC
+
+# Keep the container alive after `up` so you can exec in and run eval.
+CMD ["tail", "-f", "/dev/null"]

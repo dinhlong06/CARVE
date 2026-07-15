@@ -1,0 +1,42 @@
+# ============================================================
+# Stage-2: Qwen3-VL semantic re-ranking via vLLM.
+# vLLM pulls in its own torch + a recent transformers (5.x).
+# This env is intentionally separate from stage-1.
+# ============================================================
+FROM nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    HF_HOME=/workspace/SSDC/.hf_cache
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        python3.10 python3-pip python3.10-dev \
+        git wget curl ca-certificates \
+        libgl1 libglib2.0-0 \
+    && ln -sf /usr/bin/python3.10 /usr/bin/python \
+    && ln -sf /usr/bin/python3.10 /usr/bin/python3 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN python -m pip install --upgrade pip setuptools wheel
+
+WORKDIR /workspace/SSDC
+
+# SSDC base requirements (transformers will be bumped by vLLM next).
+COPY requirements.txt ./requirements.txt
+RUN pip install -r requirements.txt
+
+# vLLM + Qwen3-VL stage-2 deps (vLLM brings torch and transformers).
+RUN pip install vllm easydict ftfy qwen_vl_utils
+
+# Pin transformers 4.57.x: the only line that supports BOTH
+#   - Qwen3-VL (needs >=4.57, for vLLM), and
+#   - the custom models/bert.py (needs find_pruneable_heads_and_indices,
+#     which was removed in transformers 5.x).
+# vLLM accepts >=4.56, so 4.57.x stays compatible.
+RUN pip install "transformers==4.57.1"
+
+COPY . /workspace/SSDC
+
+# Keep the container alive after `up`.
+CMD ["tail", "-f", "/dev/null"]

@@ -1,0 +1,19 @@
+# ---- large weights / data: host externally, do NOT commit (see WEIGHTS.md) ----
+weights/cmp.pth
+weights/bert-base-uncased/
+data/*.jsonl
+data/ext_vith/
+data/ext_siglip/
+*.npy
+*.pt
+*.pth
+submission/*
+# ---- reproduce bundle: hosted externally, do NOT commit (see WEIGHTS.md) ----
+src/submissions/*
+# ---- generated run outputs ----
+runs/
+__pycache__/
+*.pyc
+
+# NOTE: still tracked on purpose (small):
+#   weights/adapter_ep1/ (4.5 MB), weights/lambdamart_vh.lgb (16 KB)

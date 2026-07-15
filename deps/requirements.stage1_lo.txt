@@ -1,0 +1,8 @@
+ruamel_yaml
+prettytable
+transformers
+scipy
+timm
+opencv-python
+nltk
+peft>=0.11,<0.18
