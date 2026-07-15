@@ -12,13 +12,13 @@ override/feature selection use synthetic data only; `gt.json` is used **only** t
 
 ## Table 1 — Main pipeline (cumulative, single-variable, all compliant)
 
-| # | Step (adds one module) | R@1 | mAP | LB R@1 | LB R@5 | LB R@10 | LB mAP | upload dir |
-|---|------------------------|:---:|:---:|:------:|:------:|:-------:|:------:|-----------|
-| 0 | CMP retriever (blank pose) | 69.11 ✅ | 77.91 | 68.7563 | 87.9676 | 90.5966 | 	77.5036 | `t1_step0_cmp_blank` |
-| 1 | + joint vision+text LoRA | 73.91 ✅ | 82.14 | 74.4186 | 90.7988 | 	93.7310 | 	82.2043 | `t1_step1_joint_lora` |
-| 2 | + LambdaMART fusion (base feat: sim+rank ×3) | 76.39 ✅ | 84.34 | 76.8453 | 	93.1244 | 95.6522 | 	84.4147 | `t1_step2_lambdamart` |
-| 3 | ↑ rich fusion features (z-norm/consensus/margin/agree) | 77.15 ✅ | 84.92 | 77.3509 | 93.7310 | 95.5511 | 	84.8590 | `lambdamart_pool_3enc_rich` |
-| 4 | + Stage-2 s2hy7 (default blend + synthetic-selected L5) ⭐ | **82.10** ✅ | 87.99 | 82.5076 | 94.6411 | 95.7533 | 88.1621 | `lambdamart_3enc_rich_s2hy7_synL5` |
+| # | Step (adds one module) | R@1 | mAP | LB R@1 | LB R@5 | LB R@10 | LB mAP |
+|---|------------------------|:---:|:---:|:------:|:------:|:-------:|:------:|
+| 0 | CMP retriever (blank pose) | 69.11 ✅ | 77.91 | 68.7563 | 87.9676 | 90.5966 | 	77.5036 |
+| 1 | + joint vision+text LoRA | 73.91 ✅ | 82.14 | 74.4186 | 90.7988 | 	93.7310 | 	82.2043 |
+| 2 | + LambdaMART fusion (base feat: sim+rank ×3) | 76.39 ✅ | 84.34 | 76.8453 | 	93.1244 | 95.6522 | 	84.4147 |
+| 3 | ↑ rich fusion features (z-norm/consensus/margin/agree) | 77.15 ✅ | 84.92 | 77.3509 | 93.7310 | 95.5511 | 	84.8590 |
+| 4 | + Stage-2 s2hy7 (default blend + synthetic-selected L5) ⭐ | **82.10** ✅ | 87.99 | 82.5076 | 94.6411 | 95.7533 | 88.1621 |
 
 Cumulative **+12.99 R@1**, all compliant, all reproduced offline (CPU) from the cached VLM verdicts.
 **Step 3** is a stage-1-only upgrade — swap the 6 base fusion features for 16 *rich* features
