@@ -1,6 +1,6 @@
 # CARVE — Consensus-Aware Retrieve-and-Verify Ensemble
 
-**Text-based Person Anomaly Search** — AI City 2026 Track-4 / ECCV.
+**Track 4 — Text-based Person Anomaly Search** · AI City Challenge 2026 / ECCV · **Team Artiz**.
 
 Clean, self-contained package to **reproduce, train, and evaluate** our best submission. Isolated
 from the working repos — no stale code or tuned state.
@@ -10,10 +10,10 @@ learned fusion of three retrieval encoders proposes candidates, and a panel of t
 different-family multimodal LLMs verifies them. Agreement is domain-invariant, which is what lets a
 **synthetic-only**-trained pipeline transfer to the real gallery.
 
-- **Best result:** local-proxy **R@1 82.10 / mAP 87.99** — rich-feature LambdaMART stage-1 + s2hy7
-  with a default blend and a synthetic-selected L5 override. Fully compliant (no test data / `gt.json`
-  in training or selection). See [`RESULTS.md`](RESULTS.md) → "Rich fusion features" and "Compliant
-  Stage-2 selection". Leaderboard filled after upload.
+## Result
+
+**#14 on the official Track-4 leaderboard** — **R@1 82.2042 / mAP 88.0971**.
+
 - **Compliance:** Track-4 synthetic-data-only. No test data / `gt.json` touches training or
   hyper-parameter selection. Fusion is a synthetic-trained **LambdaMART**; Stage-2 uses **default**
   hyper-parameters. No gt-tuned "diagnostic" numbers are reported.
@@ -146,4 +146,3 @@ CARVE/
 ## Integrity
 - Code verified complete: 0 unresolved local imports, all files byte-compile.
 - Stage-2 endpoint reproduces offline from the cached VLM verdicts (md5-verified vs originals).
-
